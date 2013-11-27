@@ -17,5 +17,12 @@
 	<classpathentry kind="lib" path="hazelcast-3.1.1.jar" sourcepath="C:/Users/jetan/.m2/repository/com/hazelcast/hazelcast/3.1.1/hazelcast-3.1.1-sources.jar"/>
 	<classpathentry kind="lib" path="kafka-assembly-0.8.0-beta1-deps.jar"/>
 	<classpathentry kind="lib" path="kafka_2.8.0-0.8.0-beta1.jar"/>
+	<classpathentry kind="lib" path="hadoop-auth-2.0.0-cdh4.3.0.jar"/>
+	<classpathentry kind="lib" path="hadoop-common-2.0.0-cdh4.3.0.jar"/>
+	<classpathentry kind="lib" path="hbase-0.94.6-cdh4.3.0-security.jar"/>
+	<classpathentry kind="lib" path="commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="commons-configuration-1.6.jar"/>
+	<classpathentry kind="lib" path="protobuf-java-2.4.0a.jar"/>
+	<classpathentry kind="lib" path="avro-1.7.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
