@@ -2,6 +2,7 @@ package com.jerome;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.TableNotFoundException;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.HTablePool;
@@ -14,11 +15,13 @@ public class HBaseConnectionPool {
 	private static HTablePool hTablePool = null;
 
 	public static synchronized HTableInterface getHtable(String tableName) {
-		if (hTablePool != null)
+		if (hTablePool != null) {
+
 			return hTablePool.getTable(tableName);
-		else {
+
+		} else {
 			hTablePool = new HTablePool(conf, 20);
-//			hTablePool.
+			// hTablePool.
 			return hTablePool.getTable(tableName);
 		}
 	}

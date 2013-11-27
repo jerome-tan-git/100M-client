@@ -33,7 +33,8 @@ public class HBaseMessageParserConnector {
 		long start = System.currentTimeMillis();
 		for(int i=0;i<1000;i++)
 		{
-			HTableInterface table = HBaseConnectionPool.getHtable("test");
+			HTableInterface table = HBaseConnectionPool.getHtable("test1111"); 
+			
 		Get g = new Get(Bytes.toBytes(""+i));
 		
 		Result a = table.get(g);
@@ -46,7 +47,7 @@ public class HBaseMessageParserConnector {
 //					Bytes.toBytes("va"+i));
 //			table.put(p);
 //		}
-		System.out.println(System.currentTimeMillis() - start);
+		System.out.println((float)(System.currentTimeMillis() - start)/1000);
 		// System.out.println(2);
 		
 
