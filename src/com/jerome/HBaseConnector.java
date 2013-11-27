@@ -37,8 +37,14 @@ public class HBaseConnector {
 					SystemProperties.getInstance().getProperty(
 							"hbase.usertable"));
 			// tableDescriptor.addFamily(new HColumnDescriptor("userID"));
-			tableDescriptor.addFamily(new HColumnDescriptor("serverID"));
-			tableDescriptor.addFamily(new HColumnDescriptor("lastAccessTime"));
+			HColumnDescriptor serverIDCol = new HColumnDescriptor("serverID");
+			serverIDCol.setMaxVersions(1);
+			tableDescriptor.addFamily(serverIDCol);
+			
+			HColumnDescriptor lastAccessTimeCol = new HColumnDescriptor("lastAccessTime");
+			lastAccessTimeCol.setMaxVersions(1);
+			tableDescriptor.addFamily(lastAccessTimeCol);
+			
 			admin.createTable(tableDescriptor);
 		}
 
@@ -49,9 +55,19 @@ public class HBaseConnector {
 							"hbase.usermessage"));
 			// tableDescriptor.addFamily(new
 			// HColumnDescriptor("userID_timestamp"));
-			tableDescriptor.addFamily(new HColumnDescriptor("fromUser"));
+			HColumnDescriptor fromUserCol =new HColumnDescriptor("fromUser");
+			fromUserCol.setMaxVersions(1);
+			tableDescriptor.addFamily(new HColumnDescriptor(fromUserCol));
+			
+			
+			HColumnDescriptor messageCol =new HColumnDescriptor("message");
+			messageCol.setMaxVersions(1);
 			tableDescriptor.addFamily(new HColumnDescriptor("message"));
+			
+			HColumnDescriptor timestampCol =new HColumnDescriptor("timestamp");
+			timestampCol.setMaxVersions(1);
 			tableDescriptor.addFamily(new HColumnDescriptor("timestamp"));
+			
 			admin.createTable(tableDescriptor);
 		}
 		admin.close();
@@ -158,6 +174,7 @@ public class HBaseConnector {
 			s.setStartRow(Bytes.toBytes(_userID+"_" + formatter.format(_fromTime)));
 			s.setStopRow(Bytes.toBytes(_userID+"_" + formatter.format(_toTime)));
 			result = table.getScanner(s);  
+			
 		} catch (IOException e) {
 
 		} finally {
@@ -219,6 +236,7 @@ public class HBaseConnector {
 	    			table.delete(del);  
 	            }  
 	        } 
+			result.close();
 		} catch (IOException e) {
 
 		} finally {
