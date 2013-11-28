@@ -11,14 +11,16 @@ public class TestHBase {
 	public static void main(String[] args) throws IOException {
 		HBaseConnector hc = new HBaseConnector();
 		long start = System.currentTimeMillis();
-		for(int i=0;i<10000;i++)
+		for(int i=0;i<5000;i++)
 		{
 			hc.addUserMessage("a", "ca", "b");
 		}
+		System.out.print("Add time: ");
 		System.out.println(System.currentTimeMillis() - start);
 		start = System.currentTimeMillis();
 //		hc.batchRemoveMessage("a", 1385543855470L, 1385543855470L);
 		hc.batchRemoveMessageByUserID("a");
+		System.out.print("Del time: ");
 		System.out.println(System.currentTimeMillis() - start);
 		start = System.currentTimeMillis();
 		ResultScanner ResultScannerFilterList = hc.getAllUserMessage("a");
@@ -31,6 +33,7 @@ public class TestHBase {
                 System.out.println("value : "+new String(kv.getValue()));  
             }  
         } 
+        System.out.print("Search time: ");
         System.out.println(System.currentTimeMillis() - start);
         System.out.println(":" + count);
 //		hc.setServerIDByUserID("a", "aaaaaaaaaa");

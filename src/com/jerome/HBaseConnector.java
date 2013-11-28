@@ -2,6 +2,8 @@ package com.jerome;
 
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -220,6 +222,7 @@ public class HBaseConnector {
 	public void batchRemoveMessage(String _userID, long _fromTime, long _toTime)
 	{
 		HTableInterface table = null;
+		List<Delete> IDs = new ArrayList<Delete>();
 		try {
 			table = HBaseConnectionPool.getHtable(SystemProperties
 					.getInstance().getProperty("hbase.usermessage"));
@@ -230,12 +233,21 @@ public class HBaseConnector {
 			s.setStopRow(Bytes.toBytes(_userID+"_" + formatter.format(_toTime)));
 			ResultScanner result = table.getScanner(s);  
 			for(Result rr=result.next();rr!=null;rr=result.next()){
-
-	            for(KeyValue kv:rr.list()){  
+	            for(KeyValue kv:rr.list()){
 	            	Delete del = new Delete(kv.getRow());
-	    			table.delete(del);  
+	            	IDs.add(del);
+	            	if(IDs.size()>1000)
+	            	{
+	            		table.delete(IDs);
+	            		IDs.clear();
+	            	}
+
 	            }  
 	        } 
+			if(IDs.size()>0)
+			{
+				table.delete(IDs);
+			}
 			result.close();
 		} catch (IOException e) {
 
