@@ -17,7 +17,7 @@ public class StartProducer {
 	    producer = new kafka.javaapi.producer.Producer<Integer, String>(new ProducerConfig(props));
 	    int messageNo =0;
 	    String messageStr = new String("Message_" + messageNo);
-	    producer.send(new KeyedMessage<Integer, String>("mytest", messageStr));
+	    producer.send(new KeyedMessage<Integer, String>("receive", messageStr));
 //		Thread p = new Producer("mytest");
 //		p.start();
 	}

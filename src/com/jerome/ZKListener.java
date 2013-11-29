@@ -7,10 +7,10 @@ import com.github.zkclient.IZkChildListener;
 public class ZKListener implements IZkChildListener {
 
 	@Override
-	public void handleChildChange(String arg0, List<String> arg1)
+	public void handleChildChange(String path, List<String> children)
 			throws Exception {
-		// TODO Auto-generated method stub
-		
+			ValidServers.getInstance().refreshList(children);
+			System.out.println(children);
 	}
 
 }
