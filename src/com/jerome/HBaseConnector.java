@@ -22,13 +22,28 @@ import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
 
 public class HBaseConnector {
+	private static HBaseConnector hbase;
 	private static Configuration conf = null;
 	private NumberFormat formatter = NumberFormat.getNumberInstance();     
 	  
 	static {
 		conf = HBaseConfiguration.create();
 	}
-
+	public static HBaseConnector getInstance() 
+	{
+		if(HBaseConnector.hbase == null)
+		{
+			try
+			{
+			HBaseConnector.hbase = new HBaseConnector();
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		return HBaseConnector.hbase;
+	}
 	public HBaseConnector() throws IOException {
 		formatter.setMinimumIntegerDigits(13);     
 		formatter.setGroupingUsed(false);
@@ -132,13 +147,15 @@ public class HBaseConnector {
 	}
 	
 	
-	public void addUserMessage(String _userID, String _message, String _fromUser)
+	public String addUserMessage(String _userID, String _message, String _fromUser)
 	{
 		HTableInterface table = null;
+		String msgID = null;
 		try {
 			table = HBaseConnectionPool.getHtable(SystemProperties
 					.getInstance().getProperty("hbase.usermessage"));
-			Put p = new Put(Bytes.toBytes(_userID+"_"+System.currentTimeMillis()));
+			msgID = _userID+"_"+System.currentTimeMillis();
+			Put p = new Put(Bytes.toBytes(msgID));
 			p.add(Bytes.toBytes("fromUser"), Bytes.toBytes(""),
 					Bytes.toBytes(_fromUser));
 			p.add(Bytes.toBytes("message"), Bytes.toBytes(""),
@@ -146,8 +163,9 @@ public class HBaseConnector {
 			p.add(Bytes.toBytes("timestamp"), Bytes.toBytes(""),
 					Bytes.toBytes(System.currentTimeMillis() + ""));
 			table.put(p);
+			 
 		} catch (IOException e) {
-
+			
 		} finally {
 			if (table != null) {
 				try {
@@ -158,6 +176,7 @@ public class HBaseConnector {
 				}
 			}
 		}
+		return msgID;
 	}
 	public ResultScanner getAllUserMessage(String _userID)
 	{

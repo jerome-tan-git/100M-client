@@ -2,6 +2,9 @@ package com.jerome.test;
 
 import java.util.Properties;
 
+import com.alibaba.fastjson.JSON;
+import com.jerome.MessageObject;
+
 import kafka.producer.KeyedMessage;
 import kafka.producer.ProducerConfig;
 
@@ -30,7 +33,12 @@ public class Producer extends Thread
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-      String messageStr = new String("Message_" + messageNo);
+    	MessageObject mo = new MessageObject();
+		mo.setMsgID("messageID");
+		mo.setFromUser("fromUser");
+		mo.setToUser("UserA");
+		mo.setMessage("mess:a'ge b\"ody");
+      String messageStr = JSON.toJSONString(mo);
       producer.send(new KeyedMessage<Integer, String>(topic, messageStr));
       messageNo++;
     }

@@ -15,7 +15,7 @@ public class StartConsumer {
 		// Thread a= new Consumer("mytest");
 		// a.start();
 		ConsumerConnector consumer;
-		String topic="mytest";
+		String topic="receive_ServerA";
 		Properties props = new Properties();
 		props.put("zookeeper.connect", "192.168.103.5");
 		props.put("group.id", KafkaProperties.groupId);
