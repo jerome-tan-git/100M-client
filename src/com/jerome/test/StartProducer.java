@@ -7,7 +7,7 @@ import kafka.producer.ProducerConfig;
 
 public class StartProducer {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		kafka.javaapi.producer.Producer<Integer, String> producer;
 		String topic;
 		Properties props = new Properties();
@@ -16,8 +16,12 @@ public class StartProducer {
 
 	    producer = new kafka.javaapi.producer.Producer<Integer, String>(new ProducerConfig(props));
 	    int messageNo =0;
-	    String messageStr = new String("Message_" + messageNo);
-	    producer.send(new KeyedMessage<Integer, String>("receive", messageStr));
+	    for(int i=0;i<100;i++)
+	    {
+		    String messageStr = new String("Message_" + i);
+		    producer.send(new KeyedMessage<Integer, String>("receive", messageStr));
+		    Thread.sleep(1000);
+	    }
 //		Thread p = new Producer("mytest");
 //		p.start();
 	}

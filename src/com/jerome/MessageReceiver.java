@@ -16,7 +16,7 @@ public class MessageReceiver {
 	private final ConsumerConnector consumer;
 	private final String topic;
 	private final int timeout;
-
+	private MessageProcessor mprocessor;
 	public MessageReceiver() throws IOException {
 		consumer = kafka.consumer.Consumer
 				.createJavaConsumerConnector(createConsumerConfig());
@@ -24,6 +24,7 @@ public class MessageReceiver {
 				"kafka.receive.topic");
 		this.timeout = Integer.parseInt(SystemProperties.getInstance()
 				.getProperty("kafka.consumer.timeout.ms"));
+		this.mprocessor = new MessageProcessor();
 	}
 
 	private ConsumerConfig createConsumerConfig() throws IOException {
@@ -58,13 +59,14 @@ public class MessageReceiver {
 		try {
 			long start = System.currentTimeMillis();
 			while (it.hasNext()) {
-				System.out.println(new String(it.next().message()));
+				this.mprocessor.processMessage(new String(it.next().message()));
 				if ((System.currentTimeMillis() - start) > this.timeout) {
 					throw new ConsumerTimeoutException();
 				}
 			}
 		} catch (ConsumerTimeoutException e) {
 			consumer.shutdown();
+			this.mprocessor.close();
 		}
 
 	}
