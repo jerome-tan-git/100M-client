@@ -17,7 +17,7 @@ public class StartProducer {
 		props.put("serializer.class", "kafka.serializer.StringEncoder");
 		props.put("metadata.broker.list",
 				"BITEST10.VCLK.NET:9092,BITEST12.VCLK.NET:9092");
-
+		
 		producer = new kafka.javaapi.producer.Producer<Integer, String>(
 				new ProducerConfig(props));
 		int messageNo = 0;
@@ -27,6 +27,7 @@ public class StartProducer {
 			mo.setFromUser("fromUser");
 			mo.setToUser("123456");
 			mo.setMessage("mess:a'ge b\"ody");
+			mo.setMessageType("TEXT");
 			String messageStr = JSON.toJSONString(mo);
 
 			producer.send(new KeyedMessage<Integer, String>("receive",

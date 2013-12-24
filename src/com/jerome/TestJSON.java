@@ -9,6 +9,7 @@ public class TestJSON {
 		mo.setFromUser("fromUser");
 		mo.setToUser("toUser");
 		mo.setMessage("mess:a'ge b\"ody");
+		mo.setMessageType("1");
 //		long start = System.currentTimeMillis();
 //		for (int i = 0; i < 1000000; i++) {
 //			JSON.toJSONString(mo);

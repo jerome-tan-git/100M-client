@@ -14,7 +14,8 @@ public class MessageProcessor {
 
 	public MessageProcessor() throws IOException {
 		Properties props = new Properties();
-		props.put("metadata.broker.list", SystemProperties.getInstance().getProperty("kafka.broker.list"));
+		props.put("metadata.broker.list", SystemProperties.getInstance()
+				.getProperty("kafka.broker.list"));
 
 		props.put("serializer.class", SystemProperties.getInstance()
 				.getProperty("kafka.serializer.class"));
@@ -25,42 +26,50 @@ public class MessageProcessor {
 
 	public void processMessage(String _msg) {
 		System.out.println("Get message: " + _msg);
-		
-		HBaseConnector hc =HBaseConnector.getInstance();
-		if(hc != null)
-		{
-			MessageObject o= null;
+
+		HBaseConnector hc = HBaseConnector.getInstance();
+		if (hc != null) {
+			MessageObject o = null;
 			try {
 				o = JSON.parseObject(_msg, MessageObject.class);
 			} catch (Exception e) {
 				System.out.println("Invalid message format: " + e.getMessage());
 			}
-			if(o!=null)
-			{
-				String msgID = hc.addUserMessage(o.getToUser(), o.getMessage(), o.getFromUser());
-				o.setMsgID(msgID);
-				if(msgID != null)
-				{
+			if (o != null && o.getMessageType()!=null) {
+				if (o.getMessageType().equals("TEXT")) {
 					String serverID = hc.getServerIDByUserID(o.getToUser());
-					if(ValidServers.getInstance().serverOnline(serverID))
-					{
-						String backMessage = JSON.toJSONString(o);						
-					    producer.send(new KeyedMessage<Integer, String>("receive_"+serverID, backMessage));
-					    System.out.println("Message sent: " + "receive_"+serverID + " | " + backMessage);
+					String msgID = hc.addUserMessage(o.getToUser(),
+							o.getMessage(), o.getFromUser());
+					o.setMsgID(msgID);
+					if (msgID != null) {
+
+						if (serverID != null && !serverID.equals("")) {
+							String backMessage = JSON.toJSONString(o);
+							producer.send(new KeyedMessage<Integer, String>(
+									"receive_" + serverID, backMessage));
+							System.out.println("Message sent: " + "receive_"
+									+ serverID + " | " + backMessage);
+						} else {
+							System.out.println("No server found for userID: "
+									+ o.getToUser());
+						}
 					}
-					else
-					{
-						System.out.println("No server found for userID: " + o.getToUser());
+				} else if (o.getMessageType().equals("NEW_USER")) {
+					if (o.getMessage() != null && !o.getMessage().equals("")) {
+						hc.setServerIDByUserID(o.getMessage(),
+								o.getFromServer());
 					}
+				} else if (o.getMessageType().equals("NEW_SERVER")) {
+
 				}
+
 			}
 		}
-		
+
 	}
-	public void close()
-	{
-		if(this.producer !=null)
-		{
+
+	public void close() {
+		if (this.producer != null) {
 			this.producer.close();
 		}
 	}

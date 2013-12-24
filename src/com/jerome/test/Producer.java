@@ -38,7 +38,9 @@ public class Producer extends Thread
 		mo.setFromUser("fromUser");
 		mo.setToUser("UserA");
 		mo.setMessage("mess:a'ge b\"ody");
+		mo.setMessageType("TEXT");
       String messageStr = JSON.toJSONString(mo);
+      System.out.println("Send message:" + messageStr);
       producer.send(new KeyedMessage<Integer, String>(topic, messageStr));
       messageNo++;
     }

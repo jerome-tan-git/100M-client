@@ -77,21 +77,28 @@ public class HBaseConnector {
 							"hbase.usermessage"));
 			// tableDescriptor.addFamily(new
 			// HColumnDescriptor("userID_timestamp"));
+			int ttl = msgTTL * 3600 ;
+//			int ttl = 10;
 			HColumnDescriptor fromUserCol = new HColumnDescriptor("fromUser");
 			fromUserCol.setMaxVersions(1);
-			fromUserCol.setTimeToLive(msgTTL * 3600 * 1000);
-			tableDescriptor.addFamily(new HColumnDescriptor(fromUserCol));
+			fromUserCol.setTimeToLive(ttl);
+			tableDescriptor.addFamily(fromUserCol);
 
 			HColumnDescriptor messageCol = new HColumnDescriptor("message");
 			messageCol.setMaxVersions(1);
-			messageCol.setTimeToLive(msgTTL * 3600 * 1000);
-			tableDescriptor.addFamily(new HColumnDescriptor("message"));
+			messageCol.setTimeToLive(ttl);
+			tableDescriptor.addFamily(messageCol);
 
 			HColumnDescriptor timestampCol = new HColumnDescriptor("timestamp");
 			timestampCol.setMaxVersions(1);
-			timestampCol.setTimeToLive(msgTTL * 3600 * 1000);
-			tableDescriptor.addFamily(new HColumnDescriptor("timestamp"));
+			timestampCol.setTimeToLive(ttl);
+			tableDescriptor.addFamily(timestampCol);
 
+			HColumnDescriptor toServerCol = new HColumnDescriptor("toServer");
+			toServerCol.setMaxVersions(1);
+			toServerCol.setTimeToLive(ttl);
+			tableDescriptor.addFamily(toServerCol);
+			
 			admin.createTable(tableDescriptor);
 		}
 		admin.close();

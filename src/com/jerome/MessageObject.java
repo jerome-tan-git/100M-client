@@ -5,7 +5,14 @@ public class MessageObject {
 	private String toUser;
 	private String message;
 	private String msgID;
-	
+	private String messageType;
+	private String fromServer;
+	public String getFromServer() {
+		return fromServer;
+	}
+	public void setFromServer(String fromServer) {
+		this.fromServer = fromServer;
+	}
 	public String getMsgID() {
 		return msgID;
 	}
@@ -26,6 +33,12 @@ public class MessageObject {
 	}
 	public String getMessage() {
 		return message;
+	}
+	public String getMessageType() {
+		return messageType;
+	}
+	public void setMessageType(String messageType) {
+		this.messageType = messageType;
 	}
 	public void setMessage(String message) {
 		this.message = message;
